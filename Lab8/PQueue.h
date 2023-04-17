@@ -9,62 +9,120 @@ class PriorityQueue {
 private:
     std::vector<T> data;
     int maxN;
+    bool isMax;
 
-    void heapify(int i){
-        int left = 2*i;
-        int right = 2*i+1;
-        int size = data.size();
-        int largest = i;
-        if (left <= size && data[left] > data[largest])
-            largest = left;
-        if (right <= size && data[right]> data[largest])
-            largest = right;
-        if (largest!= i){
-            T tmp = data[i];
-            data[i] = data[largest];
-            data[largest] = tmp;
-            heapify(largest);
+    bool compare(int i, int j) {
+        if (isMax)
+            return data[i] > data[j];
+        else return data[i] < data[j];
+    }
+
+    void heapify(int i) {
+        int leftChild;
+        int rightChild;
+        int largestChild;
+        int heapSize = data.size();
+
+        while (true) {
+            leftChild = 2 * i + 1;
+            rightChild = 2 * i + 2;
+            largestChild = i;
+
+            if (leftChild < heapSize && compare(leftChild, largestChild)) {
+                largestChild = leftChild;
+            }
+
+            if (rightChild < heapSize && compare(rightChild, largestChild)) {
+                largestChild = rightChild;
+            }
+
+            if (largestChild == i) {
+                break;
+            }
+
+            int temp = data[i];
+            data[i] = data[largestChild];
+            data[largestChild] = temp;
+            i = largestChild;
         }
     }
+
+    void changeHeap(bool isMaxPassed) {
+        if (isMaxPassed) {
+            isMax = false;
+            for (int i = (data.size() - 2) / 2; i >= 0; --i) {
+                heapify(i);
+            }
+        } else {
+            isMax = true;
+            for (int i = (data.size() - 2) / 2; i >= 0; --i) {
+                heapify(i);
+            }
+        }
+    }
+
 public:
-    PriorityQueue(){
+    PriorityQueue() {
+        isMax = true;
         maxN = N;
     }
+
     void Enqueue(T item) {
-        if(data.size() == maxN){
+        if (data.size() == maxN) {
             std::cout << "Reached max capacity\n";
             return;
         }
-        data.push_back(item);
-        int lastIndex = data.size() - 1;
 
-        while (lastIndex > 0) {
-            int indexMiddle = (lastIndex - 1) / 2;
-            if (data[lastIndex] <= data[indexMiddle])
-                break;
-            T tmp = data[lastIndex];
-            data[lastIndex] = data[indexMiddle];
-            data[indexMiddle] = tmp;
-            lastIndex = indexMiddle;
+        data.push_back(item);
+        int i = data.size() - 1;
+        int parent = (i - 1) / 2;
+
+        while (i > 0 && !compare(parent, i) ){
+            int temp = data[i];
+            data[i] = data[parent];
+            data[parent] = temp;
+            i = parent;
+            parent = (i - 1) / 2;
         }
+
     }
 
 
-    T Dequeue() {
-        int li = data.size() - 1;
+    T DequeueMax() {
+        if (!isMax) {
+            changeHeap(isMax);
+        }
         T frontItem = data[0];
-        data[0] = data[li];
+        data[0] = data[data.size() - 1];
         data.pop_back();
         heapify(0);
         return frontItem;
     }
 
-
-    T Peek() {
+    T DequeueMin() {
+        if (isMax) {
+            changeHeap(isMax);
+        }
         T frontItem = data[0];
+        data[0] = data[data.size() - 1];
+        data.pop_back();
+        heapify(0);
         return frontItem;
     }
 
+    T PeekMax() {
+        if (!isMax) {
+            changeHeap(isMax);
+        }
+        return data[0];
+    }
+
+    T PeekMin() {
+        if (isMax) {
+            changeHeap(isMax);
+        }
+        return data[0];
+    }
 };
 
 
