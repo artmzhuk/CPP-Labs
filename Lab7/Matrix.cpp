@@ -30,18 +30,11 @@ void Matrix::setValue(int value, int x, int y){
         for (int i = 0; i < cols_; i++){
             this->pointer[x][i] = nullptr;
         }
-        int* valuePtr = new int[1];
-        *valuePtr = value;
-        this->pointer[x][y] = valuePtr;
+        this->pointer[x][y] = new int(value);
     } else if (this->pointer[x][y] == nullptr){
-        int* valuePtr = new int[1];
-        *valuePtr = value;
-        this->pointer[x][y] = valuePtr;
+        this->pointer[x][y] = new int(value);
     } else {
-        int* valuePtr = new int[1];
-        *valuePtr = value;
-        delete this->pointer[x][y];
-        this->pointer[x][y] = valuePtr;
+        *this->pointer[x][y] = value;
     }
 }
 
@@ -68,9 +61,9 @@ Matrix::~Matrix() {
         for (int j = 0; j < cols_; j++){
             delete this->pointer[i][j];
         }
-        delete this->pointer[i];
+        delete[] this->pointer[i];
     }
-    delete this->pointer;
+    delete[] this->pointer;
 };
 
 /*
