@@ -42,7 +42,10 @@ void Matrix2::multAndAddTo(int src, int dst, int k) {
 void Matrix2::print() {
     for(int i = 0; i < numOfRows; ++i){
         for(int j = 0; j < numOfColumns; ++j){
-            std::cout << rows[i]->columns[j] << " ";
+            if (rows[i]->columns[j] != INT_MAX)
+                std::cout << rows[i]->columns[j] << " ";
+            else
+                std::cout << "x ";
         }
         std::cout << std::endl;
     }
