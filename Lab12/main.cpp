@@ -37,7 +37,7 @@ string convert_to_html(string text) {
 }
 
 int main() {
-    fs::path currentDir = "C:\\Users\\artm\\CLionProjects\\laba12\\testFiles";
+    fs::path currentDir = "/home/artm/CLionProjects/CPP-Labs/Lab12/testFiles";
     for (const auto &entry: fs::directory_iterator(currentDir)) {
         if (entry.is_regular_file() && entry.path().extension() == ".txt") {
             string text;
